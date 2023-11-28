@@ -24,3 +24,8 @@ class SpotifyDataset:
         """Returns the lyrics at a specific index"""
 
         return self.df.loc[index, 'text']
+    
+    def get_title(self, index):
+        """Returns the title at a specific index"""
+
+        return self.df.loc[index, 'song']
