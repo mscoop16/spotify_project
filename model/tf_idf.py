@@ -7,7 +7,7 @@ A baseline model for comparison using TF-IDF vectorization
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
-from dataset import SpotifyDataset
+from spotify_dataset import SpotifyDataset
 
 class TFIDFGenerator:
     def __init__(self, dataset):

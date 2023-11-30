@@ -1,5 +1,5 @@
 from sklearn.metrics.pairwise import cosine_similarity
-from dataset import SpotifyDataset
+from spotify_dataset import SpotifyDataset
 from model.tf_idf import TFIDFGenerator
 
 class SongRecommendationSystem:
