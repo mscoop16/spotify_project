@@ -1,0 +1,14 @@
+Enter a song: Someone Like You
+How many similar songs would you like?: 10
+
+Similar Songs!
+0: Lick It Up
+1: Beside You
+2: Thunderhead
+3: Bodysnatchers
+4: A Boy's Best Friend
+5: Only In Miami
+6: Our Diabolical Rapture
+7: The Family Ghost
+8: Badman's Song
+9: Fall At Your Feet

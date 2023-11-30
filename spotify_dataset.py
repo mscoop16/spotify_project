@@ -29,3 +29,14 @@ class SpotifyDataset:
         """Returns the title at a specific index"""
 
         return self.df.loc[index, 'song']
+    
+    def get_index_from_title(self, title):
+        """Returns the index corresponding to a given title"""
+
+        index = self.df.index[self.df['song'] == title].tolist()
+
+        if not index:
+            print(f"Title '{title}' not found in the dataset.")
+            return None
+
+        return index[0]
