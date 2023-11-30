@@ -27,6 +27,7 @@ class EmotionsNaiveBayes:
         self.model.fit(self.X_train, self.y_train)
 
     def evaluate_model(self, set_name):
+        """Evaulate the model using f1-score on the specified set"""
         # Make predictions on the set
         X_set = None
         y_set = None
