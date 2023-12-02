@@ -7,7 +7,7 @@ A fine-tuned BERT implementation for emotion classification
 import pandas as pd
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
-from transformers import BertTokenizer, BertForSequenceClassification, AdamW
+from transformers import BertTokenizer, BertForSequenceClassification, AdamW, BertConfig
 from torch.utils.data import DataLoader, Dataset
 from torch.nn import functional as F
 import torch
@@ -44,11 +44,12 @@ class EmotionBERT(torch.nn.Module):
         """Initialized pretrained BERT model for classification"""
         super(EmotionBERT, self).__init__()
 
-        self.bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=num_labels)
+        config = BertConfig.from_pretrained('bert-base-uncased', num_labels=num_labels)
+        self.bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', config=config)
 
-    def forward(self, input_ids, attention_mask, labels):
+    def forward(self, input_ids, attention_mask, labels, token_type_ids):
         """Defines a forward propogation step"""
-        outputs = self.bert_model(input_ids, attention_mask, labels)
+        outputs = self.bert_model(input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids, labels=labels)
         return outputs
 
 def train_epoch(model, dataloader, optimizer, device):
@@ -66,14 +67,14 @@ def train_epoch(model, dataloader, optimizer, device):
         optimizer.zero_grad()
 
         # Produce output 
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        outputs = model(input_ids, attention_mask=attention_mask, token_type_ids=None, labels=labels)
         loss = outputs.loss
         total_loss += loss.item()
 
         loss.backward()
         optimizer.step()
 
-        return total_loss / len(dataloader)
+    return total_loss / len(dataloader)
     
 def evaluate_model(model, dataloader, device):
     """Generate labels and predictions for evaluation"""

@@ -37,8 +37,8 @@ val_dataset = EmotionSet(
 )
 
 test_dataset = EmotionSet(
-    texts=test_df['text'],
-    labels=test_df['labels'],
+    texts=test_df['text'].values,
+    labels=test_df['label'].values,
     tokenizer=tokenizer,
     max_len=128
 )
@@ -54,12 +54,18 @@ model = EmotionBERT(num_labels=len(label_encoder.classes_))
 # Set up parameters for training
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
-optimizer = AdamW(model.parameters(), lr=2e-5)
+optimizer = torch.optim.AdamW(model.parameters(), lr=2e-5)
 
 # Set number of epochs and train
 num_epochs = 3
 for epoch in range(num_epochs):
     train_loss = train_epoch(model, train_dataloader, optimizer, device)
+    print(f'Training loss for epoch {epoch}: {train_loss}')
 
     val_labels, val_preds = evaluate_model(model, val_dataloader, device)
     val_report = classification_report(val_labels, val_preds)
+    print("Validation Report:", val_report)
+
+    test_labels, test_preds = evaluate_model(model, test_dataloader, device)
+    test_report = classification_report(test_labels, test_preds)
+    print("Test Report:", test_report)
