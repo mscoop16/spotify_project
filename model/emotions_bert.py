@@ -50,3 +50,54 @@ class EmotionBERT(torch.nn.Module):
         """Defines a forward propogation step"""
         outputs = self.bert_model(input_ids, attention_mask, labels)
         return outputs
+
+def train_epoch(model, dataloader, optimizer, device):
+    """Train the BERT model for one epoch while calculating loss"""
+    model.train()
+
+    total_loss = 0
+
+    for batch in tqdm(dataloader, total=len(dataloader), desc="Training"):
+        # Ensure all data is on correct device
+        input_ids = batch['input_ids'].to(device)
+        attention_mask = batch['attention_mask'].to(device)
+        labels = batch['labels'].to(device)
+
+        optimizer.zero_grad()
+
+        # Produce output 
+        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        loss = outputs.loss
+        total_loss += loss.item()
+
+        loss.backward()
+        optimizer.step()
+
+        return total_loss / len(dataloader)
+    
+def evaluate_model(model, dataloader, device):
+    """Generate labels and predictions for evaluation"""
+
+    # Put model into evaluation mode
+    model.eval()
+    all_labels = []
+    all_predictions = []
+
+    with torch.no_grad():
+        for batch in tqdm(dataloader, total=len(dataloader), desc="Evaluating"):
+            # Ensure data is on correct device
+            input_ids = batch['input_ids'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            labels = batch['labels'].to(device)
+
+            # Generate outputs/logts
+            outputs = model(input_ids, attention_mask=attention_mask)
+            logits = outputs.logits
+
+            # Get predicted labels
+            predictions = F.softmax(logits, dim=1).argmax(dim=1)
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predictions.cpu().numpy())
+
+    # Return labels and predictions for further evaluation
+    return all_labels, all_predictions
