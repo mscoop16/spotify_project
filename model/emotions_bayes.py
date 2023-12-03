@@ -60,6 +60,7 @@ class EmotionsNaiveBayes:
             f1_score = self.evaluate_model(set_name)
             f1_scores.append(f1_score)
 
+        plt.figure(figsize=(30, 24))
         plt.bar(sets, f1_scores, color=['blue', 'orange', 'green'])
         plt.ylabel('F1-Score')
         plt.title('Emotions NB: Train vs Validation vs Test F1-Scores')
@@ -84,7 +85,7 @@ class EmotionsNaiveBayes:
         plt.figure(figsize=(8, 6))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=self.lb.classes_,
                     yticklabels=self.lb.classes_)
-        plt.title(f'Navive Bayes Confusion Matrix - {set_name}')
+        plt.title(f'Naive Bayes Confusion Matrix - {set_name}')
         plt.xlabel('Predicted Label')
         plt.ylabel('True Label')
         plt.show()
