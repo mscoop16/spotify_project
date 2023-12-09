@@ -26,18 +26,26 @@ class EmotionSet(Dataset):
         return len(self.texts)
     
     def __getitem__(self, index):
-        """Returns the item at the specified index"""
-        text = str(self.texts[index])
-        label = self.labels[index]
+      """Returns the item at the specified index"""
+      text = str(self.texts[index])
+      inputs = self.tokenizer(
+          text,
+          truncation=True,
+          padding='max_length',
+          max_length=self.max_len,
+          return_tensors='pt'
+      )
 
-        inputs = self.tokenizer(text, truncation=True, padding='max_length',
-                                max_length=self.max_len, return_tensors='pt')
-        
-        return {
-            'input_ids' : inputs['input_ids'].flatten(),
-            'attention_mask' : inputs['attention_mask'].flatten(),
-            'labels' : torch.tensor(label, dtype=torch.long)
-        }
+      item = {
+          'input_ids': inputs['input_ids'].flatten(),
+          'attention_mask': inputs['attention_mask'].flatten(),
+      }
+
+      if self.labels is not None:
+          label = self.labels[index]
+          item['labels'] = torch.tensor(label, dtype=torch.long)
+
+      return item
     
 class EmotionBERT(torch.nn.Module):
     def __init__(self, num_labels):
@@ -47,9 +55,13 @@ class EmotionBERT(torch.nn.Module):
         config = BertConfig.from_pretrained('bert-base-uncased', num_labels=num_labels)
         self.bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', config=config)
 
-    def forward(self, input_ids, attention_mask, labels, token_type_ids):
-        """Defines a forward propogation step"""
-        outputs = self.bert_model(input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids, labels=labels)
+    def forward(self, input_ids, attention_mask, labels=None, token_type_ids=None):
+        """Defines a forward propagation step"""
+        if labels is not None:
+            outputs = self.bert_model(input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids, labels=labels)
+        else:
+            outputs = self.bert_model(input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
+
         return outputs
 
 def train_epoch(model, dataloader, optimizer, device):
@@ -92,7 +104,7 @@ def evaluate_model(model, dataloader, device):
             labels = batch['labels'].to(device)
 
             # Generate outputs/logts
-            outputs = model(input_ids, attention_mask=attention_mask)
+            outputs = model(input_ids, attention_mask=attention_mask, token_type_ids=None, labels=labels)
             logits = outputs.logits
 
             # Get predicted labels

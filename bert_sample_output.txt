@@ -1,0 +1,15 @@
+[Spotify] Predicting Probabilities: 100% 3604/3604 [11:39<00:00,  5.15it/s]
+Enter a song: Someone Like You
+How many similar songs would you like?: 10
+
+Similar Songs!
+0: Anxious
+1: No Self Control
+2: No Self Control
+3: Flying Solo
+4: Gotta Get Away
+5: Fly Away
+6: Eight Miles High
+7: Bring Him Home
+8: Rain
+9: More Than Natural
