@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Song Recommender</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Song Recommender</h1>
+
+        <form id="song-form" action="/recommender/?target=/" method="post" enctype="multipart/form-data">
+            <input type="text" id="song-input" name="song" placeholder="Enter a song..." required>
+            <input type="number" id="number-input" name="k" min=1 max=20 required>
+            <!-- Dropdown for genre -->
+            <!-- <select id='model' name="model" required>
+                <option value="">model</option>
+                <option value='bayes'>Naive Bayes</option>
+            </select> -->
+            <button type="submit" name="recommend">Recommend Songs</button>
+        </form>
+        {% if active %}
+        <div id="recommendations">
+            {% if available %}
+                <p>Here are our {{num_recs}} recommendations for {{song}}</p>
+                {% if sim_songs %}
+                {% for song in sim_songs%}
+                <p> {{song.num}} : {{song.title}}</p>
+                {% endfor %}
+                {% endif %}
+            {% else %}
+                <p>The song {{song}} is not available in the current dataset. Please try another song</p>
+            {% endif %}
+            <!-- Recommendations will be populated here -->
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>  

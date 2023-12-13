@@ -50,35 +50,35 @@ class NBEmotionPredictor:
     
 
 # Load the emotions dataset
-dataset = EmotionsDatasetTFIDF('data/emotions/train.txt',
-                                'data/emotions/val.txt',
-                                'data/emotions/test.txt')
+# dataset = EmotionsDatasetTFIDF('data/emotions/train.txt',
+#                                 'data/emotions/val.txt',
+#                                 'data/emotions/test.txt')
 
-# Create the emotions classifier
-emotion_classifier = EmotionsNaiveBayes(dataset)
+# # Create the emotions classifier
+# emotion_classifier = EmotionsNaiveBayes(dataset)
 
-# Train the emotions classifier
-emotion_classifier.train_model()
+# # Train the emotions classifier
+# emotion_classifier.train_model()
 
-# Create a recommendation predictor object
-label_predictor = NBEmotionPredictor(model=emotion_classifier, vectorizer=emotion_classifier.dataset.tfidf_vectorizer)
+# # Create a recommendation predictor object
+# label_predictor = NBEmotionPredictor(model=emotion_classifier, vectorizer=emotion_classifier.dataset.tfidf_vectorizer)
 
-# Load spotify data
-spotify = SpotifyDataset('data/spotify_millsongdata.csv')
+# # Load spotify data
+# spotify = SpotifyDataset('data/spotify_millsongdata.csv')
 
-# Predict probabilities for spotify songs
-label_predictor.predict_label_probabilities(spotify.df['text'])
+# # Predict probabilities for spotify songs
+# label_predictor.predict_label_probabilities(spotify.df['text'])
 
-# Get user input
-song_choice = input('Enter a song: ')
-neighbors = input('How many similar songs would you like?: ')
+# # Get user input
+# song_choice = input('Enter a song: ')
+# neighbors = input('How many similar songs would you like?: ')
 
-# Find and print k most similar songs to the user
-song_index = spotify.get_index_from_title(song_choice)
+# # Find and print k most similar songs to the user
+# song_index = spotify.get_index_from_title(song_choice)
 
-neighbor_indices = label_predictor.get_recommendations(song_index, int(neighbors))
+# neighbor_indices = label_predictor.get_recommendations(song_index, int(neighbors))
 
-print()
-print('Similar Songs!')
-for i, idx in enumerate(neighbor_indices):
-    print(f'{i}:', spotify.get_title(idx))
+# print()
+# print('Similar Songs!')
+# for i, idx in enumerate(neighbor_indices):
+#     print(f'{i}:', spotify.get_title(idx))
